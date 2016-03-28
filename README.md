@@ -9,7 +9,7 @@ Run Instructions
 * Download repo
 * `cd yad-pac`
 * (On OSX) `sudo easy_install pip && sudo pip install -r requirements.txt`
-* `python src/pgen.py`
+* `python src/pgen.py -h`
 
 Dev Instructions
 ----------------
