@@ -14,7 +14,5 @@ Run Instructions
 Dev Instructions
 ----------------
 
-* Download repo
-* `cd yad-pac`
-* (On OSX) `sudo easy_install pip && sudo pip install tox`
+Following the same instructions as the **Run Instructions** above. After making changes, run your tests with:
 * `make test`
