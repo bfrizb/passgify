@@ -1,0 +1,3 @@
+# If you change this file you will need to run tox --recreate
+pyperclip
+pyyaml
