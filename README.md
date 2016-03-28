@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/bfrizb/yad-pac.svg?branch=master)](https://travis-ci.org/bfrizb/yad-pac)
+
 Yet Another Deterministic Password Creator (yad-pac)
 ====================================================
 

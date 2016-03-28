@@ -132,14 +132,14 @@ def test_pb64_digest(input_, output):
 
 
 def test_decrypt_image_not_darwin():
-    with patch('sys.platform', return_value='not_darwin'), pytest.raises(SystemError):
+    with patch('src.pgen.sys', platform='not_darwin'), pytest.raises(SystemError):
         decrypt_image('', '')
 
 
 def test_decrypt_image_is_darwin():
     mock_write = MagicMock()
     fake_password = 'fake_password'
-    with patch('src.pgen.subprocess.Popen', return_value=MagicMock(
+    with patch('src.pgen.sys', platform='darwin'), patch('src.pgen.subprocess.Popen', return_value=MagicMock(
         communicate=MagicMock(return_value=('fake_output', 'fake_error')),
         stdin=MagicMock(write=mock_write)
     )):
@@ -162,7 +162,7 @@ def test_overwrite_countdown_negative_seconds(sec):
 
 
 def test_overwrite_countdown_ten_seconds():
-    with patch('time.sleep') as mock_sleep:
+    with patch('time.sleep') as mock_sleep, patch('pyperclip.copy'):
         overwrite_countdown(99, 10)
         assert mock_sleep.call_count == 10
 
