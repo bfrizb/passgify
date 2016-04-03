@@ -1,15 +1,15 @@
-[![Build Status](https://travis-ci.org/bfrizb/yad-pac.svg?branch=master)](https://travis-ci.org/bfrizb/yad-pac)
+[![Build Status](https://travis-ci.org/bfrizb/passgify.svg?branch=master)](https://travis-ci.org/bfrizb/passgify)
 
-Yet Another Deterministic Password Creator (yad-pac)
+Passgify
 ====================================================
 
-A tool to deterministically generate pseudo-random passwords.
+A tool to deterministically generate pseudo-random passwords. (Passgify is pronounced like "pacify", but with a 'g' instead of a 'c' sound)
 
 Run Instructions
 ----------------
 
 * Download repo
-* `cd yad-pac`
+* `cd passgify`
 * (On OSX) `sudo easy_install pip && sudo pip install -r requirements.txt`
 * `python src/pgen.py -h`
 

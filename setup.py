@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name="yad-pac",  # Yet Another Deterministic Password Creator
+    name="passgify",
     version=0.1,
     author="Brian Frisbie",
     description="A tool to deterministically generate pseudo-random passwords",
