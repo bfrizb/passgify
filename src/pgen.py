@@ -12,6 +12,7 @@ import getpass
 import hashlib
 import logging
 import os
+import pkg_resources
 import pyperclip
 import subprocess
 import sys
@@ -20,9 +21,9 @@ import yaml
 from random import random
 from random import sample
 
-__version__ = "0.1"
+PROGRAM_NAME = "passgify"
 PROGRAM_PURPOSE = """Generates passwords from a hashed service_id's, salt, and secret key"""
-DEFAULT_CONFIG_FILE = '{0}/.pgen.yaml'.format(os.path.dirname(os.path.abspath(__file__)))
+DEFAULT_CONFIG_FILE = '{0}/.pgen.yaml'.format(os.path.expanduser('~'))
 SPECIAL_CHARS = [chr(x) for x in range(33, 48) + range(58, 65) + range(91, 97)]
 DEFAULT_PB64_MAP = [chr(x) for x in range(65, 73) + range(74, 79) + range(80, 91)] + \
                    [chr(x) for x in range(97, 108) + range(109, 123)] + \
@@ -251,27 +252,32 @@ def overwrite_countdown(password_length, countdown_seconds=10):
     pyperclip.copy('z' * 2 * password_length)
 
 
-def parse_args(prog_name):
-    parser = argparse.ArgumentParser(prog=prog_name, description=PROGRAM_PURPOSE)
-    parser.add_argument('-v', '--version', action='version', version='%(prog)s version ' + str(__version__))
-    parser.add_argument('service_id', help='[REQUIRED] A service identifier. It can be anything really, as long as '
-                        'its unique. A common choice is the name of the service, such as a website name (e.g. google, '
-                        'amazon)')
-    parser.add_argument('-c', '--config_path', default=DEFAULT_CONFIG_FILE, help='[OPTIONAL] Path to the '
-                        'YAML configuration file for this program (default = %(default)s)')
-    parser.add_argument('-l', '--length', type=int, help='[OPTIONAL] Length of hashed password including its prefix')
-    parser.add_argument('-p', '--prefix', help='[OPTIONAL] Prefix to hashed password')
-    parser.add_argument('-d', '--decrypt_disk_image_path', default=None, metavar='IMAGE_PATH', help='[OPTIOANL] '
-                        'Instead of copying the generated password to the clipboard, use it to open a disk image '
-                        'located at PATH (Only supported for disk images on Mac OS X currently.')
-    return parser.parse_args()
-
-
-def main(argv):
-    args = parse_args(argv[0])
+def main(args):
     logging.basicConfig(level=logging.INFO)
     pgen = PGen()
     pgen.generate_password(args.service_id, args.prefix, args.length, args.config_path, args.decrypt_disk_image_path)
 
+
+def parse_args():
+    try:
+        version = pkg_resources.require(PROGRAM_NAME)[0].version
+    except pkg_resources.DistributionNotFound:
+        version = '(Install with "sudo python setup.py install" to get program version number)'
+
+    parser = argparse.ArgumentParser(prog=PROGRAM_NAME, description=PROGRAM_PURPOSE)
+    parser.add_argument('-v', '--version', action='version', version='{0} {1}'.format(
+        PROGRAM_NAME, version))
+    parser.add_argument('service_id', help='[REQUIRED] A service identifier. It can be anything really, as long as '
+                        'its unique. A common choice is the name of the service, such as a website name (e.g. google, '
+                        'amazon)')
+    parser.add_argument('-c', '--config_path', default=DEFAULT_CONFIG_FILE, help='[OPTIONAL] Path to the YAML '
+                        'configuration file for this program (default = "%(default)s")')
+    parser.add_argument('-l', '--length', type=int, help='[OPTIONAL] Length of hashed password including its prefix')
+    parser.add_argument('-p', '--prefix', help='[OPTIONAL] Prefix to hashed password')
+    parser.add_argument('-d', '--decrypt_disk_image_path', default=None, metavar='IMAGE_PATH', help='[OPTIONAL] '
+                        'Instead of copying the generated password to the clipboard, use it to open a disk image '
+                        'located at PATH (Only supported for disk images on Mac OS X currently.')
+    return parser.parse_args()
+
 if __name__ == '__main__':
-    main(sys.argv)
+    main(parse_args())

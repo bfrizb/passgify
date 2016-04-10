@@ -168,6 +168,6 @@ def test_overwrite_countdown_ten_seconds():
 
 
 def test_main():
-    with patch('src.pgen.parse_args'), patch('src.pgen.PGen') as mock_pgen:
+    with patch('src.pgen.PGen') as mock_pgen:
         main(MagicMock())
         assert mock_pgen().generate_password.call_count == 1

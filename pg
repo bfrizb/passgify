@@ -1,0 +1,5 @@
+#!/usr/bin/python
+
+from src.pgen import main
+from src.pgen import parse_args
+main(parse_args())

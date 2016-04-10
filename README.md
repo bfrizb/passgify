@@ -10,11 +10,13 @@ Run Instructions
 
 * Download repo
 * `cd passgify`
-* (On OSX) `sudo easy_install pip && sudo pip install -r requirements.txt`
-* `python src/pgen.py -h`
+* `sudo python setup.py install`
+* Run: `pg -h`
 
 Dev Instructions
 ----------------
 
-Following the same instructions as the **Run Instructions** above. After making changes, run your tests with:
+* Download repo
+* `cd passgify`
+* (On OSX) `sudo easy_install pip && sudo pip install -r requirements.txt`
 * `make test`

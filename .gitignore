@@ -1,4 +1,6 @@
 *.DS_Store
 *.pyc
-pgen.egg-info/
+build/
+dist/
+passgify.egg-info/
 .pgen.yaml
