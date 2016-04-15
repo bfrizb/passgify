@@ -2,12 +2,12 @@
 import pytest
 from mock import MagicMock
 from mock import patch
-from src.pgen import PGen
-from src.pgen import decrypt_image
-from src.pgen import pb64_digest
-from src.pgen import overwrite_countdown
-from src.pgen import create_config_file
-from src.pgen import main
+from modules.pgen import PGen
+from modules.pgen import decrypt_image
+from modules.pgen import pb64_digest
+from modules.pgen import overwrite_countdown
+from modules.pgen import create_config_file
+from modules.pgen import main
 
 
 @pytest.fixture
@@ -23,7 +23,7 @@ def pgen_obj():
     return pg
 
 
-@pytest.mark.parametrize("length", [
+@pytest.mark.parametrize('length', [
     '', 'blah', -5, 0, None
 ])
 def test_generate_password_bad_password_lengths(pgen_obj, length):
@@ -41,7 +41,7 @@ def test_generate_password_bad_hashing_alg(pgen_obj):
                                    config_path='blah', decrypt_disk_image_path='blah')
 
 
-@pytest.mark.parametrize("overwrite_seconds", [
+@pytest.mark.parametrize('overwrite_seconds', [
     'not_an_int', -5
 ])
 def test_generate_password_bad_countdown_account(pgen_obj, overwrite_seconds):
@@ -54,21 +54,21 @@ def test_generate_password_bad_countdown_account(pgen_obj, overwrite_seconds):
 
 def test_generate_password_too_long_length(pgen_obj):
     # Testing a password that is too long
-    with patch('src.pgen.getpass.getpass', return_value='mock_secret_key'), \
-            patch('src.pgen.pb64_digest', return_value='too_short'), pytest.raises(ValueError):
+    with patch('modules.pgen.getpass.getpass', return_value='mock_secret_key'), \
+            patch('modules.pgen.pb64_digest', return_value='too_short'), pytest.raises(ValueError):
         pgen_obj.generate_password(service_id='blah', prefix=None, length=20,
                                    config_path='blah', decrypt_disk_image_path='blah')
 
 
-@pytest.mark.parametrize("decrypt_disk_image_path", [
+@pytest.mark.parametrize('decrypt_disk_image_path', [
     None, 'a_path'
 ])
 def test_generate_password_valid(pgen_obj, decrypt_disk_image_path):
     test_length = 7
     mock_overwrite = MagicMock()
-    with patch('src.pgen.getpass.getpass', return_value='mock_secret_key'), \
-            patch('src.pgen.pb64_digest', return_value='mock_pb64_hash'), patch('src.pgen.decrypt_image'), \
-            patch('src.pgen.pyperclip.copy'), patch('src.pgen.overwrite_countdown', mock_overwrite):
+    with patch('modules.pgen.getpass.getpass', return_value='mock_secret_key'), \
+            patch('modules.pgen.pb64_digest', return_value='mock_pb64_hash'), patch('modules.pgen.decrypt_image'), \
+            patch('modules.pgen.pyperclip.copy'), patch('modules.pgen.overwrite_countdown', mock_overwrite):
         pgen_obj.generate_password(service_id='blah', prefix=None, length=test_length,
                                    config_path='blah', decrypt_disk_image_path=decrypt_disk_image_path)
         if decrypt_disk_image_path:
@@ -77,7 +77,7 @@ def test_generate_password_valid(pgen_obj, decrypt_disk_image_path):
             mock_overwrite.assert_called_with(test_length, pgen_obj.sec_til_overwrite)
 
 
-@pytest.mark.parametrize("detect_error", [
+@pytest.mark.parametrize('detect_error', [
     True, False
 ])
 def test__read_config_empty_config(detect_error):
@@ -87,7 +87,7 @@ def test__read_config_empty_config(detect_error):
         with pytest.raises(IOError):
             pg.read_config('')
     else:
-        with patch('src.pgen.create_config_file'), patch('src.pgen.yaml.load', return_value={
+        with patch('modules.pgen.create_config_file'), patch('modules.pgen.yaml.load', return_value={
             'salt': fake_salt, 'default_length': None, 'default_prefix': None, 'hashing_algorithm': None,
             'seconds_until_overwrite': None, 'pseudo_base64_map': None,
         }):
@@ -97,7 +97,7 @@ def test__read_config_empty_config(detect_error):
 
 def test__read_config_mocked_config():
     pg = PGen()
-    with patch('__builtin__.open'), patch('src.pgen.yaml.load', return_value={}), pytest.raises(KeyError):
+    with patch('__builtin__.open'), patch('modules.pgen.yaml.load', return_value={}), pytest.raises(KeyError):
         pg.read_config('')
 
 
@@ -119,7 +119,7 @@ def test_create_config_file_defaults():
         mock_open.assert_called_with(fake_config_path, 'r')
 
 
-@pytest.mark.parametrize("input_,output", [
+@pytest.mark.parametrize('input_,output', [
     ('', ''),
     ('ab', ''),
     ('abc', '1t'),
@@ -132,14 +132,14 @@ def test_pb64_digest(input_, output):
 
 
 def test_decrypt_image_not_darwin():
-    with patch('src.pgen.sys', platform='not_darwin'), pytest.raises(SystemError):
+    with patch('modules.pgen.sys', platform='not_darwin'), pytest.raises(SystemError):
         decrypt_image('', '')
 
 
 def test_decrypt_image_is_darwin():
     mock_write = MagicMock()
     fake_password = 'fake_password'
-    with patch('src.pgen.sys', platform='darwin'), patch('src.pgen.subprocess.Popen', return_value=MagicMock(
+    with patch('modules.pgen.sys', platform='darwin'), patch('modules.pgen.subprocess.Popen', return_value=MagicMock(
         communicate=MagicMock(return_value=('fake_output', 'fake_error')),
         stdin=MagicMock(write=mock_write)
     )):
@@ -152,7 +152,7 @@ def test_overwrite_countdown_value_err():
         overwrite_countdown(-3, 'blah')
 
 
-@pytest.mark.parametrize("sec", [
+@pytest.mark.parametrize('sec', [
     -99, -1, 0,
 ])
 def test_overwrite_countdown_negative_seconds(sec):
@@ -168,6 +168,6 @@ def test_overwrite_countdown_ten_seconds():
 
 
 def test_main():
-    with patch('src.pgen.PGen') as mock_pgen:
+    with patch('modules.pgen.PGen') as mock_pgen:
         main(MagicMock())
         assert mock_pgen().generate_password.call_count == 1

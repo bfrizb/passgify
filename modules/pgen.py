@@ -21,7 +21,7 @@ import yaml
 from random import random
 from random import sample
 
-PROGRAM_NAME = "passgify"
+PROGRAM_NAME = 'passgify'
 PROGRAM_PURPOSE = """Generates passwords from a hashed service_id's, salt, and secret key"""
 DEFAULT_CONFIG_FILE = '{0}/.pgen.yaml'.format(os.path.expanduser('~'))
 SPECIAL_CHARS = [chr(x) for x in range(33, 48) + range(58, 65) + range(91, 97)]
