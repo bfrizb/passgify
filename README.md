@@ -34,8 +34,8 @@ If you enter the wrong Secret Key, passgify will not generate any error message.
 FAQs
 ----------------
 
-How do you pronounce "passgify"?
-Passgify is pronounced like "pacify", but with a 'g' instead of a 'c' sound
+* How do you pronounce "passgify"?
+  * Passgify is pronounced like "pacify", but with a 'g' instead of a 'c' sound
 
 Dev Instructions
 ----------------
