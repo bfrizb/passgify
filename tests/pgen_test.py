@@ -1,19 +1,13 @@
 # -*- coding: utf-8 -*-
+import mock
 import pytest
-from mock import MagicMock
-from mock import patch
-from modules.pgen import PGen
-from modules.pgen import decrypt_image
-from modules.pgen import pb64_digest
-from modules.pgen import overwrite_countdown
-from modules.pgen import create_config_file
-from modules.pgen import main
+from modules import pgen
 
 
 @pytest.fixture
 def pgen_obj():
-    pg = PGen()
-    pg.read_config = MagicMock(return_value=True)
+    pg = pgen.PGen()
+    pg.read_config = mock.MagicMock(return_value=True)
     # Mock default values
     pg.default_length = 'not_an_int'
     pg.default_prefix = '&*'
@@ -54,8 +48,8 @@ def test_generate_password_bad_countdown_account(pgen_obj, overwrite_seconds):
 
 def test_generate_password_too_long_length(pgen_obj):
     # Testing a password that is too long
-    with patch('modules.pgen.getpass.getpass', return_value='mock_secret_key'), \
-            patch('modules.pgen.pb64_digest', return_value='too_short'), pytest.raises(ValueError):
+    with mock.patch('modules.pgen.getpass.getpass', return_value='mock_secret_key'), \
+            mock.patch('modules.pgen.pb64_digest', return_value='too_short'), pytest.raises(ValueError):
         pgen_obj.generate_password(service_id='blah', prefix=None, length=20,
                                    config_path='blah', decrypt_disk_image_path='blah')
 
@@ -65,10 +59,11 @@ def test_generate_password_too_long_length(pgen_obj):
 ])
 def test_generate_password_valid(pgen_obj, decrypt_disk_image_path):
     test_length = 7
-    mock_overwrite = MagicMock()
-    with patch('modules.pgen.getpass.getpass', return_value='mock_secret_key'), \
-            patch('modules.pgen.pb64_digest', return_value='mock_pb64_hash'), patch('modules.pgen.decrypt_image'), \
-            patch('modules.pgen.pyperclip.copy'), patch('modules.pgen.overwrite_countdown', mock_overwrite):
+    mock_overwrite = mock.MagicMock()
+    with mock.patch('modules.pgen.getpass.getpass', return_value='mock_secret_key'), mock.patch(
+            'modules.pgen.pb64_digest', return_value='mock_pb64_hash'), mock.patch(
+            'modules.pgen.decrypt_image'), mock.patch('modules.pgen.pyperclip.copy'), mock.patch(
+            'modules.pgen.overwrite_countdown', mock_overwrite):
         pgen_obj.generate_password(service_id='blah', prefix=None, length=test_length,
                                    config_path='blah', decrypt_disk_image_path=decrypt_disk_image_path)
         if decrypt_disk_image_path:
@@ -81,13 +76,13 @@ def test_generate_password_valid(pgen_obj, decrypt_disk_image_path):
     True, False
 ])
 def test__read_config_empty_config(detect_error):
-    pg = PGen()
+    pg = pgen.PGen()
     fake_salt = 'fake_salt'
     if detect_error:
         with pytest.raises(IOError):
             pg.read_config('')
     else:
-        with patch('modules.pgen.create_config_file'), patch('modules.pgen.yaml.load', return_value={
+        with mock.patch('modules.pgen.create_config_file'), mock.patch('modules.pgen.yaml.load', return_value={
             'salt': fake_salt, 'default_length': None, 'default_prefix': None, 'hashing_algorithm': None,
             'seconds_until_overwrite': None, 'pseudo_base64_map': None,
         }):
@@ -96,26 +91,26 @@ def test__read_config_empty_config(detect_error):
 
 
 def test__read_config_mocked_config():
-    pg = PGen()
-    with patch('__builtin__.open'), patch('modules.pgen.yaml.load', return_value={}), pytest.raises(KeyError):
+    pg = pgen.PGen()
+    with mock.patch('__builtin__.open'), mock.patch('modules.pgen.yaml.load', return_value={}), pytest.raises(KeyError):
         pg.read_config('')
 
 
 def test_create_config_file_bad_hash_alg():
-    with patch('__builtin__.raw_input', return_value='fake'), pytest.raises(AttributeError):
-        create_config_file('fake_config_path')
+    with mock.patch('__builtin__.raw_input', return_value='fake'), pytest.raises(AttributeError):
+        pgen.create_config_file('fake_config_path')
 
 
 def test_create_config_file_bad_config_path():
-    with patch('__builtin__.raw_input', return_value=''), pytest.raises(IOError):
-        create_config_file('')
+    with mock.patch('__builtin__.raw_input', return_value=''), pytest.raises(IOError):
+        pgen.create_config_file('')
 
 
 def test_create_config_file_defaults():
-    mock_open = MagicMock()
+    mock_open = mock.MagicMock()
     fake_config_path = 'fake_config_path'
-    with patch('__builtin__.raw_input', return_value=''), patch('__builtin__.open', mock_open):
-        create_config_file(fake_config_path)
+    with mock.patch('__builtin__.raw_input', return_value=''), mock.patch('__builtin__.open', mock_open):
+        pgen.create_config_file(fake_config_path)
         mock_open.assert_called_with(fake_config_path, 'r')
 
 
@@ -128,46 +123,45 @@ def test_create_config_file_defaults():
     ('abcdef', '1ty6'),
 ])
 def test_pb64_digest(input_, output):
-    assert pb64_digest(input_) == output
+    assert pgen.pb64_digest(input_) == output
 
 
 def test_decrypt_image_not_darwin():
-    with patch('modules.pgen.sys', platform='not_darwin'), pytest.raises(SystemError):
-        decrypt_image('', '')
+    with mock.patch('modules.pgen.sys', platform='not_darwin'), pytest.raises(SystemError):
+        pgen.decrypt_image('', '')
 
 
 def test_decrypt_image_is_darwin():
-    mock_write = MagicMock()
+    mock_write = mock.MagicMock()
     fake_password = 'fake_password'
-    with patch('modules.pgen.sys', platform='darwin'), patch('modules.pgen.subprocess.Popen', return_value=MagicMock(
-        communicate=MagicMock(return_value=('fake_output', 'fake_error')),
-        stdin=MagicMock(write=mock_write)
-    )):
-        decrypt_image('', fake_password)
+    with mock.patch('modules.pgen.sys', platform='darwin'), mock.patch(
+            'modules.pgen.subprocess.Popen', return_value=mock.MagicMock(communicate=mock.MagicMock(
+                return_value=('fake_output', 'fake_error')), stdin=mock.MagicMock(write=mock_write))):
+        pgen.decrypt_image('', fake_password)
         mock_write.assert_called_with(fake_password)
 
 
 def test_overwrite_countdown_value_err():
     with pytest.raises(ValueError):
-        overwrite_countdown(-3, 'blah')
+        pgen.overwrite_countdown(-3, 'blah')
 
 
 @pytest.mark.parametrize('sec', [
     -99, -1, 0,
 ])
 def test_overwrite_countdown_negative_seconds(sec):
-    with patch('pyperclip.copy') as mock_pyperclip:
-        overwrite_countdown(10, sec)
+    with mock.patch('pyperclip.copy') as mock_pyperclip:
+        pgen.overwrite_countdown(10, sec)
         assert mock_pyperclip.call_count == 1
 
 
 def test_overwrite_countdown_ten_seconds():
-    with patch('time.sleep') as mock_sleep, patch('pyperclip.copy'):
-        overwrite_countdown(99, 10)
+    with mock.patch('time.sleep') as mock_sleep, mock.patch('pyperclip.copy'):
+        pgen.overwrite_countdown(99, 10)
         assert mock_sleep.call_count == 10
 
 
 def test_main():
-    with patch('modules.pgen.PGen') as mock_pgen:
-        main(MagicMock())
+    with mock.patch('modules.pgen.PGen') as mock_pgen:
+        pgen.main(mock.MagicMock())
         assert mock_pgen().generate_password.call_count == 1

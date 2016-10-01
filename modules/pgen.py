@@ -7,6 +7,7 @@
 # - From existing folder: hdiutil create "{}.dmg" -encryption -srcfolder "{}" -volname "{}"
 # - New Sparsebundle: Use create_encrypted_sparsebundle.sh
 
+
 import argparse
 import getpass
 import hashlib
@@ -14,12 +15,11 @@ import logging
 import os
 import pkg_resources
 import pyperclip
+import random
 import subprocess
 import sys
 import time
 import yaml
-from random import random
-from random import sample
 
 PROGRAM_NAME = 'passgify'
 PROGRAM_PURPOSE = """Generates passwords from a hashed service_id's, salt, and secret key"""
@@ -96,7 +96,7 @@ class PGen(object):
 
         # Check that requested password length isn't too long
         if len(full_password) < length:
-            raise ValueError('Currently, the max password length for your chosen prefix is {0} characters'.format(
+            raise ValueError('The max password length for your chosen prefix is {0} characters'.format(
                 len(full_password)))
 
         # Check if the user wants to decrypt a disk image
@@ -150,11 +150,11 @@ def create_config_file(config_path):
     default_length = raw_input('Choose default Password LENGTH [32]: ')
     if len(default_length.strip()) == 0:
         default_length = 32
-    rand_prefix = sample(SPECIAL_CHARS, 1)[0] + sample(SPECIAL_CHARS, 1)[0]
+    rand_prefix = random.sample(SPECIAL_CHARS, 1)[0] + random.sample(SPECIAL_CHARS, 1)[0]
     default_prefix = raw_input('Choose default Password PREFIX [{0}]: '.format(rand_prefix))
     if len(default_prefix.strip()) == 0:
         default_prefix = rand_prefix
-    rand_salt = pb64_digest(hashlib.sha512(str(random())).hexdigest())[:4]
+    rand_salt = pb64_digest(hashlib.sha512(str(random.random())).hexdigest())[:4]
     salt = raw_input('Choose password SALT [{0}]: '.format(rand_salt))
     if len(salt.strip()) == 0:
         salt = rand_salt
@@ -206,6 +206,10 @@ def pb64_digest(hex_digest):
         twelve_bits = int(hex_digest[i - 3:i], 16)
         bits1 = twelve_bits & 0x3f      # hex(63) == 0x3f
         bits2 = twelve_bits >> 6        # 2^6 = 64
+        """ Alternative pb64 algorithm
+        bits1 = (twelve_bits >> 6) & 0x3f      # hex(63) == 0x3f
+        bits2 = twelve_bits & 0x3f             # hex(63) == 0x3f
+        """
         pb_digest += DEFAULT_PB64_MAP[bits1] + DEFAULT_PB64_MAP[bits2]
     return pb_digest
 
