@@ -6,8 +6,6 @@
 # To create a new OSX sparsebundle:
 # - From existing folder: hdiutil create "{}.dmg" -encryption -srcfolder "{}" -volname "{}"
 # - New Sparsebundle: Use create_encrypted_sparsebundle.sh
-
-
 import argparse
 import getpass
 import hashlib
