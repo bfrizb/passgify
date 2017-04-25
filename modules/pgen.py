@@ -18,13 +18,14 @@ import subprocess
 import sys
 import time
 import yaml
+from itertools import chain
 
 PROGRAM_NAME = 'passgify'
 PROGRAM_PURPOSE = """Generates passwords from a hashed service_id's, salt, and secret key"""
 DEFAULT_CONFIG_FILE = '{0}/.pgen.yaml'.format(os.path.expanduser('~'))
-SPECIAL_CHARS = [chr(x) for x in range(33, 48) + range(58, 65) + range(91, 97)]
-DEFAULT_PB64_MAP = [chr(x) for x in range(65, 73) + range(74, 79) + range(80, 91)] + \
-                   [chr(x) for x in range(97, 108) + range(109, 123)] + \
+SPECIAL_CHARS = [chr(x) for x in chain(range(33, 48), range(58, 65), range(91, 97))]
+DEFAULT_PB64_MAP = [chr(x) for x in chain(range(65, 73), range(74, 79), range(80, 91))] + \
+                   [chr(x) for x in chain(range(97, 108), range(109, 123))] + \
                    [str(x) for x in range(0, 10)] + [str(x) for x in range(0, 5)]
 # ^ "I", "l", & "O" are excluded
 
@@ -221,8 +222,8 @@ def decrypt_image(decrypt_disk_image_path, password):
     """
 
     if sys.platform != 'darwin':
-        raise SystemError('The "decrypt_disk_image_path" option currently only works on the Darwin platform '
-                          '(e.g. Mac OS X). You are running on the "{0}" platform'.format(sys.platform))
+        raise NotImplemented('The "decrypt_disk_image_path" option currently only works on the Darwin platform '
+                             '(e.g. Mac OS X). You are running on the "{0}" platform'.format(sys.platform))
     p = subprocess.Popen(['hdiutil', 'attach', decrypt_disk_image_path, '-stdinpass'],
                          stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
     p.stdin.write(password)
