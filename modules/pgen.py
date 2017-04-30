@@ -222,8 +222,8 @@ def decrypt_image(decrypt_disk_image_path, password):
     """
 
     if sys.platform != 'darwin':
-        raise NotImplemented('The "decrypt_disk_image_path" option currently only works on the Darwin platform '
-                             '(e.g. Mac OS X). You are running on the "{0}" platform'.format(sys.platform))
+        raise NotImplementedError('The "decrypt_disk_image_path" option currently only works on the Darwin platform '
+                                  '(e.g. Mac OS X). You are running on the "{0}" platform'.format(sys.platform))
     p = subprocess.Popen(['hdiutil', 'attach', decrypt_disk_image_path, '-stdinpass'],
                          stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
     p.stdin.write(password)

@@ -127,7 +127,7 @@ def test_pb64_digest(input_, output):
 
 
 def test_decrypt_image_not_darwin():
-    with mock.patch('modules.pgen.sys', platform='not_darwin'), pytest.raises(SystemError):
+    with mock.patch('modules.pgen.sys', platform='not_darwin'), pytest.raises(NotImplementedError):
         pgen.decrypt_image('', '')
 
 
