@@ -1,5 +1,5 @@
 -   repo: git://github.com/pre-commit/pre-commit-hooks
-    sha: ff65d01841ad012d0a9aa1dc451fc4539d8b7baf
+    sha: 5bf6c09bfa1297d3692cadd621ef95f1284e33c0
     hooks:
     -   id: autopep8-wrapper
         args:

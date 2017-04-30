@@ -282,5 +282,6 @@ def parse_args():
                         'located at PATH (Only supported for disk images on Mac OS X currently.')
     return parser.parse_args()
 
+
 if __name__ == '__main__':
     main(parse_args())
