@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup
 from setuptools import find_packages
-__version__ = '0.2.6'
+__version__ = '0.2.7'
 
 setup(
     name='passgify',
