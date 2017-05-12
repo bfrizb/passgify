@@ -90,7 +90,7 @@ class PGen(object):
         secret_key = getpass.getpass(prompt='')
 
         # Generate the "full length" password
-        pb64_hash = pb64_digest(hash_method(service_id + self.salt + secret_key).hexdigest())
+        pb64_hash = pb64_digest(hash_method((service_id + self.salt + secret_key).encode('utf-8')).hexdigest())
         full_password = prefix + pb64_hash
 
         # Check that requested password length isn't too long
@@ -142,23 +142,25 @@ def create_config_file(config_path):
         A file handle (read-only) to the newly created config file, None on error
     """
     logging.info('No configuration file found. Creating a config file.')
+
     # Choose config file path, default length, default prefix, and salt
-    file_path = raw_input('Choose config File PATH [{0}]: '.format(config_path))
+    input_method = raw_input if sys.version_info[0] == 2 else input
+    file_path = input_method('Choose config File PATH [{0}]: '.format(config_path))
     if len(file_path.strip()) == 0:
         file_path = config_path
-    default_length = raw_input('Choose default Password LENGTH [32]: ')
+    default_length = input_method('Choose default Password LENGTH [32]: ')
     if len(default_length.strip()) == 0:
         default_length = 32
     rand_prefix = random.sample(SPECIAL_CHARS, 1)[0] + random.sample(SPECIAL_CHARS, 1)[0]
-    default_prefix = raw_input('Choose default Password PREFIX [{0}]: '.format(rand_prefix))
+    default_prefix = input_method('Choose default Password PREFIX [{0}]: '.format(rand_prefix))
     if len(default_prefix.strip()) == 0:
         default_prefix = rand_prefix
     rand_salt = pb64_digest(hashlib.sha512(str(random.random())).hexdigest())[:4]
-    salt = raw_input('Choose password SALT [{0}]: '.format(rand_salt))
+    salt = input_method('Choose password SALT [{0}]: '.format(rand_salt))
     if len(salt.strip()) == 0:
         salt = rand_salt
-    sec_til_overwrite = raw_input('Choose the default number of seconds to wait before overwriting the generated '
-                                  'password stored in the clipboard [10]: ')
+    sec_til_overwrite = input_method('Choose the default number of seconds to wait before overwriting the generated '
+                                     'password stored in the clipboard [10]: ')
     if len(sec_til_overwrite.strip()) == 0:
         sec_til_overwrite = 10
 
@@ -169,7 +171,7 @@ def create_config_file(config_path):
             raise AttributeError(
                 '"{0}" is not a hashing algorithm supported by hashlib. Here is the list of '
                 'supported algorithms: {1}'.format(algorithm, repr(hashlib.algorithms)))
-        algorithm = raw_input('Choose a hashing algorithm [sha512]: ')
+        algorithm = input_method('Choose a hashing algorithm [sha512]: ')
         if len(algorithm.strip()) == 0:
             algorithm = 'sha512'
 
