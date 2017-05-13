@@ -92,24 +92,25 @@ def test__read_config_empty_config(detect_error):
 
 def test__read_config_mocked_config():
     pg = pgen.PGen()
-    with mock.patch('__builtin__.open'), mock.patch('modules.pgen.yaml.load', return_value={}), pytest.raises(KeyError):
+    with mock.patch('modules.pgen.open'), \
+            mock.patch('modules.pgen.yaml.load', return_value={}), pytest.raises(KeyError):
         pg.read_config('')
 
 
 def test_create_config_file_bad_hash_alg():
-    with mock.patch('__builtin__.raw_input', return_value='fake'), pytest.raises(AttributeError):
+    with mock.patch('modules.pgen.raw_input', return_value='fake'), pytest.raises(AttributeError):
         pgen.create_config_file('fake_config_path')
 
 
 def test_create_config_file_bad_config_path():
-    with mock.patch('__builtin__.raw_input', return_value=''), pytest.raises(IOError):
+    with mock.patch('modules.pgen.raw_input', return_value=''), pytest.raises(IOError):
         pgen.create_config_file('')
 
 
 def test_create_config_file_defaults():
     mock_open = mock.MagicMock()
     fake_config_path = 'fake_config_path'
-    with mock.patch('__builtin__.raw_input', return_value=''), mock.patch('__builtin__.open', mock_open):
+    with mock.patch('modules.pgen.raw_input', return_value=''), mock.patch('modules.pgen.open', mock_open):
         pgen.create_config_file(fake_config_path)
         mock_open.assert_called_with(fake_config_path, 'r')
 
