@@ -155,7 +155,7 @@ def create_config_file(config_path):
     default_prefix = input_method('Choose default Password PREFIX [{0}]: '.format(rand_prefix))
     if len(default_prefix.strip()) == 0:
         default_prefix = rand_prefix
-    rand_salt = pb64_digest(hashlib.sha512(str(random.random())).hexdigest())[:4]
+    rand_salt = pb64_digest(hashlib.sha512(str(random.random()).encode('utf-8')).hexdigest())[:4]
     salt = input_method('Choose password SALT [{0}]: '.format(rand_salt))
     if len(salt.strip()) == 0:
         salt = rand_salt
