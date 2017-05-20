@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import mock
 import pytest
+import sys
 from modules import pgen
+input_method = 'raw_input' if sys.version_info[0] == 2 else 'input'
 
 
 @pytest.fixture
@@ -98,19 +100,20 @@ def test__read_config_mocked_config():
 
 
 def test_create_config_file_bad_hash_alg():
-    with mock.patch('modules.pgen.raw_input', return_value='fake'), pytest.raises(AttributeError):
+    with mock.patch('modules.pgen.{}'.format(input_method), return_value='fake'), pytest.raises(AttributeError):
         pgen.create_config_file('fake_config_path')
 
 
 def test_create_config_file_bad_config_path():
-    with mock.patch('modules.pgen.raw_input', return_value=''), pytest.raises(IOError):
+    with mock.patch('modules.pgen.{}'.format(input_method), return_value=''), pytest.raises(IOError):
         pgen.create_config_file('')
 
 
 def test_create_config_file_defaults():
     mock_open = mock.MagicMock()
     fake_config_path = 'fake_config_path'
-    with mock.patch('modules.pgen.raw_input', return_value=''), mock.patch('modules.pgen.open', mock_open):
+    with mock.patch('modules.pgen.{}'.format(input_method), return_value=''), \
+            mock.patch('modules.pgen.open', mock_open):
         pgen.create_config_file(fake_config_path)
         mock_open.assert_called_with(fake_config_path, 'r')
 
