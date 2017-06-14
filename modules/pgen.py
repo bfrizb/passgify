@@ -30,6 +30,7 @@ DEFAULT_PB64_MAP = [chr(x) for x in chain(range(65, 73), range(74, 79), range(80
 # ^ "I", "l", & "O" are excluded
 hashlib_algs = hashlib.algorithms if sys.version_info[0] == 2 else hashlib.algorithms_guaranteed
 
+
 class PGen(object):
 
     def generate_password(self, service_id, prefix, length, config_path, decrypt_disk_image_path):
