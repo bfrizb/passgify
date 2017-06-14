@@ -3,7 +3,7 @@
 #
 # Author:        Brian Frisbie <bfrizb on GitHub>
 #
-# To create a new OSX sparsebundle:
+# To create a new macOS sparsebundle:
 # - From existing folder: hdiutil create "{}.dmg" -encryption -srcfolder "{}" -volname "{}"
 # - New Sparsebundle: Use create_encrypted_sparsebundle.sh
 import argparse

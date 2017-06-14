@@ -42,7 +42,7 @@ Dev Instructions
 
 * Download repo
 * `cd passgify`
-* (On OSX) `sudo easy_install pip && sudo pip install -r requirements.txt`
+* (On macOS) `sudo easy_install pip && sudo pip install -r requirements.txt`
 * `make test`
 
 ### Dev Tools used in this Project ###
