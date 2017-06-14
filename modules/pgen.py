@@ -28,7 +28,7 @@ DEFAULT_PB64_MAP = [chr(x) for x in chain(range(65, 73), range(74, 79), range(80
                    [chr(x) for x in chain(range(97, 108), range(109, 123))] + \
                    [str(x) for x in range(0, 10)] + [str(x) for x in range(0, 5)]
 # ^ "I", "l", & "O" are excluded
-
+hashlib_algs = hashlib.algorithms if sys.version_info[0] == 2 else hashlib.algorithms_guaranteed
 
 class PGen(object):
 
@@ -72,7 +72,7 @@ class PGen(object):
             raise AttributeError(
                 '"{0}" is not a hashing algorithm supported by hashlib. Please edit or delete the '
                 'configuration file located here: {1}. Here is the list of supported algorithms: {2}'.format(
-                    self.algorithm, config_path, repr(hashlib.algorithms)))
+                    self.algorithm, config_path, repr(hashlib_algs)))
 
         # Get number of seconds to wait until overwriting the password in the clipboard
         overwrite_error = ValueError(
@@ -166,11 +166,11 @@ def create_config_file(config_path):
 
     # Choose hashing algorithm
     algorithm = None
-    while algorithm not in hashlib.algorithms:
+    while algorithm not in hashlib_algs:
         if algorithm is not None:
             raise AttributeError(
                 '"{0}" is not a hashing algorithm supported by hashlib. Here is the list of '
-                'supported algorithms: {1}'.format(algorithm, repr(hashlib.algorithms)))
+                'supported algorithms: {1}'.format(algorithm, repr(hashlib_algs)))
         algorithm = input_method('Choose a hashing algorithm [sha512]: ')
         if len(algorithm.strip()) == 0:
             algorithm = 'sha512'
