@@ -3,4 +3,5 @@
 build/
 dist/
 passgify.egg-info/
-.pgen.yaml
+.tox
+.passgify.yaml

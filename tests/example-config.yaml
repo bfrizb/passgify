@@ -1,0 +1,78 @@
+default_algorithm_version: 2
+
+default_length: 32
+default_prefix: '^_^'
+hashing_algorithm: sha512
+pseudo_base64_map:
+- A
+- B
+- C
+- D
+- E
+- F
+- G
+- H
+- J
+- K
+- L
+- M
+- N
+- P
+- Q
+- R
+- S
+- T
+- U
+- V
+- W
+- X
+- Y
+- Z
+- a
+- b
+- c
+- d
+- e
+- f
+- g
+- h
+- i
+- j
+- k
+- m
+- n
+- o
+- p
+- q
+- r
+- s
+- t
+- u
+- v
+- w
+- x
+- y
+- z
+- '0'
+- '1'
+- '2'
+- '3'
+- '4'
+- '5'
+- '6'
+- '7'
+- '8'
+- '9'
+- '0'
+- '1'
+- '2'
+- '3'
+- '4'
+
+salt: NaCl
+seconds_until_overwrite: 10
+
+other_algorithm_defaults:
+  1:  # Defaults for passgify algorithm version 1
+    default_prefix: '^_^'
+    salt: NaCl

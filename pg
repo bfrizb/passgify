@@ -1,5 +1,0 @@
-#!/usr/bin/python
-
-from modules.pgen import main
-from modules.pgen import parse_args
-main(parse_args())
