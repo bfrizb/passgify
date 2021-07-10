@@ -1,5 +1,5 @@
 test:
-	pre-commit run -a
+	black *.py
 	tox
 
 clean:
