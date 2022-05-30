@@ -3,7 +3,7 @@
 from setuptools import setup
 from setuptools import find_packages
 
-__version__ = '0.2.13'
+__version__ = '0.2.14'
 
 setup(
     name="passgify",
@@ -12,7 +12,7 @@ setup(
     author_email="bfrizb@github.com",
     description="A tool to deterministically generate pseudo-random passwords",
     url="https://github.com/bfrizb/passgify",
-    scripts=["pg"],
+    scripts=["src/pgen.py"],
     packages=find_packages(exclude=["tests"]),
     install_requires=["pyperclip", "pyyaml"],
 )

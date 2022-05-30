@@ -11,14 +11,15 @@ import getpass
 import hashlib
 import logging
 import os
-import pkg_resources
-import pyperclip
 import random
 import subprocess
 import sys
 import time
-import yaml
 from itertools import chain
+
+import pkg_resources
+import pyperclip
+import yaml
 
 # Constants
 PROGRAM_NAME = "passgify"
@@ -142,7 +143,7 @@ def create_config_file(config_path):
 
 
 def read_config(config_path):
-    """ Reads the configuration file for the salt, default password length, and default password prefix
+    """Reads the configuration file for the salt, default password length, and default password prefix
 
     Args:
         config_path (string): yaml configuration file path
@@ -178,7 +179,7 @@ def decrypt_image(decrypt_disk_image_path, password):
         stderr=subprocess.PIPE,
         stdin=subprocess.PIPE,
     )
-    p.stdin.write(password)
+    p.stdin.write(password.encode())
     (output, error) = p.communicate()
 
     if len(error) > 0:
@@ -237,6 +238,7 @@ class PGen(object):
             yaml_content (dict): Content of the configuration file
         """
         possible_settings = [
+            "default_algorithm_version",
             "default_length",
             "default_prefix",
             "salt",
