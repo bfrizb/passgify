@@ -123,6 +123,7 @@ def create_config_file(config_path):
             fh.write(
                 yaml.dump(
                     {
+                        "default_algorithm_version": DEFAULT_VERSION,
                         "default_length": default_length,
                         "default_prefix": default_prefix,
                         "salt": salt,
