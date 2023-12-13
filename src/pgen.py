@@ -17,9 +17,14 @@ import sys
 import time
 from itertools import chain
 
-import pkg_resources
 import pyperclip
 import yaml
+
+if sys.version_info >= (3, 8):
+    from importlib import metadata
+else:
+    import importlib_metadata as metadata
+
 
 # Constants
 PROGRAM_NAME = "passgify"
@@ -385,11 +390,7 @@ class PGen(object):
 
 
 def parse_args():
-    try:
-        version = pkg_resources.require(PROGRAM_NAME)[0].version
-    except pkg_resources.DistributionNotFound:
-        version = '(Install with "sudo python setup.py install" to get program version number)'
-
+    version = metadata.version(PROGRAM_NAME)
     parser = argparse.ArgumentParser(prog=PROGRAM_NAME, description=PROGRAM_PURPOSE)
     parser.add_argument(
         "-V",
